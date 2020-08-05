@@ -1,2 +1,9 @@
 # fastify-hmac
-Fastify plugin to verify incoming HMAC signatures
+
+Fastify plugin for HMAC signatures.
+
+## Run the example
+
+```
+npm run example -- -l info -w
+```

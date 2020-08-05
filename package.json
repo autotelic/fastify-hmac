@@ -1,0 +1,35 @@
+{
+  "name": "fastify-hmac",
+  "version": "0.0.1",
+  "description": "HMAC signature verification for fastify",
+  "main": "index.js",
+  "scripts": {
+    "test": "test",
+    "example": "fastify start example.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/autotelic/fastify-hmac.git"
+  },
+  "keywords": [
+    "fastify",
+    "hmac",
+    "security"
+  ],
+  "author": "Autotelic Development Ltd <info@autotelic.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/autotelic/fastify-hmac/issues"
+  },
+  "homepage": "https://github.com/autotelic/fastify-hmac#readme",
+  "dependencies": {
+    "fastify-plugin": "^2.1.1",
+    "http-errors": "^1.8.0"
+  },
+  "devDependencies": {
+    "fastify": "^3.1.1",
+    "fastify-cli": "^2.0.2",
+    "standard": "^14.3.4",
+    "tap": "^14.10.8"
+  }
+}
