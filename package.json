@@ -4,7 +4,7 @@
   "description": "HMAC signature verification for fastify",
   "main": "index.js",
   "scripts": {
-    "test": "test",
+    "test": "tap -R classic -j1",
     "example": "fastify start example.js"
   },
   "repository": {
