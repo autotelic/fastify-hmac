@@ -4,7 +4,9 @@ const hmac = require('.')
 
 module.exports = function (fastify, options, next) {
   fastify.register(hmac, {
-    sharedSecret: 'topSecret'
+    sharedSecret: 'topSecret',
+    getAlgorithm: () => 'sha512',
+    getDigest: () => 'base64'
   })
 
   fastify.post('/', (req, reply) => {
