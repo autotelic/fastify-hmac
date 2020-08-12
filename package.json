@@ -1,5 +1,5 @@
 {
-  "name": "fastify-hmac",
+  "name": "@autotelic/fastify-hmac",
   "version": "0.0.1",
   "description": "HMAC signature verification for fastify",
   "main": "index.js",
