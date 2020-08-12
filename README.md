@@ -7,7 +7,7 @@ Fastify plugin for HMAC signatures.
 ## Install
 
 ```shell
-npm i fastify-hmac
+npm i @autotelic/fastify-hmac
 ```
 
 ## Usage
