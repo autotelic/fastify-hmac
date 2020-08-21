@@ -44,6 +44,28 @@ module.exports = function (fastify, options, next) {
 npm run example -- -l info -w
 ```
 
+Send test messages to running server (running on localhost:3000 by default).
+
+Examples:
+
+HTTPie
+```sh
+http POST localhost:3000 Signature:'keyId="key-a", headers="(request-target) (created) (expires) host", signature="Nstb3q49bne90WmkbiZ9eyRtKCUmOWvc/kFyw/ftfLtqAXfRZGBk+hSJkXs0GRRm4Q/58c/pdIKj5DND11/fwQ==", created=1402170695, expires=1402170895'
+```
+
+cURL
+```sh
+curl --location --request POST 'localhost:3000' --header 'Signature: keyId="key-a", headers="(request-target) (created) (expires) host", signature="Nstb3q49bne90WmkbiZ9eyRtKCUmOWvc/kFyw/ftfLtqAXfRZGBk+hSJkXs0GRRm4Q/58c/pdIKj5DND11/fwQ==", created=1402170695, expires=1402170895'
+```
+
+Expected response:
+```json
+{
+    "hello": "world"
+}
+```
+
+
 ## How it works
 
 Verifies that http messages are signed according to [IETF draft standards](https://datatracker.ietf.org/doc/draft-ietf-httpbis-message-signatures/).
