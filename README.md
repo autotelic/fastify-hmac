@@ -65,6 +65,32 @@ Expected response:
 }
 ```
 
+#### Example: Shopify HMAC Query Parameter Verification
+
+Run the example
+```sh
+npm run example:shopify -- -l info -w
+```
+
+HTTPie
+```sh
+http POST localhost:3000/foo 'code'=='0907a61c0c8d55e99db179b68161bc00' 'hmac'=='700e2dadb827fcc8609e9d5ce208b2e9cdaab9df07390d2cbca10d7c328fc4bf' 'shop'=='some-shop.myshopify.com' 'state'=='0.6784241404160823' 'timestamp'=='1337178173'
+```
+
+cURL
+```sh
+curl --location --request POST 'localhost:3000/foo?code=0907a61c0c8d55e99db179b68161bc00&hmac=700e2dadb827fcc8609e9d5ce208b2e9cdaab9df07390d2cbca10d7c328fc4bf&shop=some-shop.myshopify.com&state=0.6784241404160823&timestamp=1337178173'
+```
+
+Expected response:
+```json
+{
+    "hello": "shopify"
+}
+```
+
+
+
 
 ## How it works
 
