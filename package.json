@@ -6,6 +6,7 @@
   "scripts": {
     "test": "tap -R classic -j1",
     "example": "fastify start example.js",
+    "example:shopify": "fastify start shopifyHmacExample.js",
     "fix": "standard --fix"
   },
   "repository": {

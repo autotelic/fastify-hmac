@@ -44,6 +44,13 @@ module.exports = function (fastify, options, next) {
 npm run example -- -l info -w
 ```
 
+### Example: Shopify HMAC Query Parameter Verification
+
+### Run the example
+```sh
+npm run example:shopify -- -l info -w
+```
+
 ## How it works
 
 Verifies that http messages are signed according to [IETF draft standards](https://datatracker.ietf.org/doc/draft-ietf-httpbis-message-signatures/).
