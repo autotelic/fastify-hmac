@@ -1,15 +1,14 @@
 'use strict';
 
 const hmac = require('.');
-const extractSignature = require('./lib/shopifyHmac/extractHmacParameter');
-const constructSignatureString = require('./lib/shopifyHmac/constructHmacParameter');
+const {extractHmacParameter, constructHmacParameter} = require('./lib/shopifyHMAC');
 
 module.exports = function (fastify, options, next) {
   fastify.register(hmac, {
     sharedSecret: 'hush',
     verificationErrorMessage: 'Shopify HMAC parameter verification failed',
-    extractSignature,
-    constructSignatureString,
+    extractSignature: extractHmacParameter,
+    constructSignatureString: constructHmacParameter,
     getAlgorithm: () => 'sha256',
     getDigest: () => 'hex',
   });
