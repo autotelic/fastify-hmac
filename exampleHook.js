@@ -8,10 +8,17 @@ module.exports = function (fastify, options, next) {
     getAlgorithm: () => 'sha512',
     getDigest: () => 'base64'
   })
+  fastify.addHook('preValidation', (request, reply, next) => {
+    try {
+      request.HMACValidate(request, reply, next)
+    } catch (err) {
+      reply.send(err)
+    }
+  })
 
   fastify.post('/', (req, reply) => {
     reply.type('application/json')
-    reply.send({ hello: 'world' })
+    reply.send({ hello: 'hmac' })
   })
   next()
 }
