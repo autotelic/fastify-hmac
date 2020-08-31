@@ -3,9 +3,12 @@
 const fp = require('fastify-plugin')
 const { plugin } = require('./lib')
 
-module.exports = fp(function (fastify, options, next) {
-  fastify.addHook('onRequest', plugin(options))
+function fastifyHMAC (fastify, options, next) {
+  fastify.decorateRequest('HMACValidate', plugin(options))
+
   next()
-}, {
+}
+
+module.exports = fp(fastifyHMAC, {
   name: 'fastify-hmac'
 })
