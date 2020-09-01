@@ -25,10 +25,10 @@ npm i @autotelic/fastify-hmac
       - A `verificationError` string - default: 'Unauthorized'
       - A `verificationErrorMessage` string - default: 'Signature verification failed'
       - A `digestEncoding` sting - default: 'base64'
-      - A `getDigest` method - [default](#default_getDigest_method): A method that calculates and verifies a message Digest header to be used as input to the HMAC signature.
-      - A `extractSignature` method - [default](#default_extractSignature_method): A method that extracts properties from a request Signature Header constructed according to [IETF draft standards][1]
-      - A `constructSignatureString` method - [default](#default_constructSignatureString_method): A method that constructs a Signature digest string from the key material detailed in the request Signature header according to [IETF draft standards][1]
-- Add a [global](#global_hook_example) or [route level](#route_level_hook_example) `preValidation` hook to your application.
+      - A `getDigest` method - [default](#default-getDigest-method): A method that calculates and verifies a message Digest header to be used as input to the HMAC signature.
+      - A `extractSignature` method - [default](#default-extractSignature-method): A method that extracts properties from a request Signature Header constructed according to [IETF draft standards][1]
+      - A `constructSignatureString` method - [default](#default-constructSignatureString-method): A method that constructs a Signature digest string from the key material detailed in the request Signature header according to [IETF draft standards][1]
+- Add a [global](#global-hook-example) or [route level](#route-level-hook-example) `preValidation` hook to your application.
   - **Note:** For verification of HMAC signatures that include a body Digest header as HMAC key material, the `validateHMAC` step must take place on the `preValidation` lifecycle step as the fastify request body parsing takes place just prior to `preValidation`. Prior to `preValidation`, `request.body` will always be `null`.
 
 ### Global Hook Example
