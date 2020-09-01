@@ -16,6 +16,14 @@ module.exports = function (fastify, options, next) {
     getDigest: () => 'hex'
   })
 
+  fastify.addHook('preValidation', (request, reply, next) => {
+    try {
+      request.validateHMAC(request, reply, next)
+    } catch (err) {
+      reply.send(err)
+    }
+  })
+
   fastify.post('/foo', (req, reply) => {
     reply.type('application/json')
     reply.send({ hello: 'shopify' })

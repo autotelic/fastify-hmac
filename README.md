@@ -109,20 +109,27 @@ npm run example:decorator -- -l info -w
 The `extractSignature` and `constructSignatureString` methods can also be entirely replaced during registration by passing in new methods. This example shows how this plugin can be modified to verify Shopify Query String HMAC parameters instead of Signature headers. 
 
 ```js
-const hmac = require('.')
 const {
   extractShopifySignature,
   constructShopifySignature
 } = require('./lib/shopifyHMAC')
 
 module.exports = function (fastify, options, next) {
-  fastify.register(hmac, {
+  fastify.register(require('fastify-hmac'), {
     sharedSecret: 'hush',
     verificationErrorMessage: 'Shopify HMAC parameter verification failed',
     extractSignature: extractShopifySignature,
     constructSignatureString: constructShopifySignature,
     getAlgorithm: () => 'sha256',
     getDigest: () => 'hex'
+  })
+
+  fastify.addHook('preValidation', (request, reply, next) => {
+    try {
+      request.validateHMAC(request, reply, next)
+    } catch (err) {
+      reply.send(err)
+    }
   })
 
   fastify.post('/foo', (req, reply) => {

@@ -7,7 +7,7 @@
     "test": "tap -R classic -j1",
     "example:hook": "fastify start exampleHook.js",
     "example:decorator": "fastify start exampleDecorator.js",
-    "example:shopify": "fastify start shopifyHmacExample.js",
+    "example:shopify": "fastify start exampleShopify.js",
     "fix": "standard --fix"
   },
   "repository": {
