@@ -9,9 +9,9 @@ module.exports = function (fastify, options, next) {
     getDigest: () => 'base64'
   })
 
-  fastify.decorate('validateHMAC', function (request, reply, next) {
+  fastify.decorate('verifyHMAC', function (request, reply, next) {
     try {
-      request.HMACValidate(request, reply, next)
+      request.validateHMAC(request, reply, next)
     } catch (err) {
       reply.send(err)
     }
@@ -24,7 +24,7 @@ module.exports = function (fastify, options, next) {
 
   fastify.post('/foo',
     {
-      preValidation: [fastify.validateHMAC]
+      preValidation: [fastify.verifyHMAC]
     },
     (req, reply) => {
       reply.type('application/json')

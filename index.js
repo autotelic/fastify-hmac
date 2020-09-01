@@ -4,7 +4,7 @@ const fp = require('fastify-plugin')
 const { plugin } = require('./lib')
 
 function fastifyHMAC (fastify, options, next) {
-  fastify.decorateRequest('HMACValidate', plugin(options))
+  fastify.decorateRequest('validateHMAC', plugin(options))
 
   next()
 }

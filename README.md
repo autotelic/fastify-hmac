@@ -27,7 +27,7 @@ npm i @autotelic/fastify-hmac
       - A `extractSignature` method - [default](#default_extractSignature_method): A method that extracts properties from a request Signature Header constructed according to [IETF draft standards][1]
       - A `constructSignatureString` method - [default](#default_constructSignatureString_method): A method that constructs a Signature digest string from the key material detailed in the request Signature header according to [IETF draft standards][1]
 - Add a [global](#global_hook_example) or [route level](#route_level_hook_example) `preValidation` hook to your application.
-  - **Note:** For verification of HMAC signatures that include a body Digest header as HMAC key material, the `HMACValidation` step must take place on the `preValidation` lifecycle step as the fastify request body parsing takes place just prior to `preValidation`. Prior to `preValidation`, `request.body` will always be `null`.
+  - **Note:** For verification of HMAC signatures that include a body Digest header as HMAC key material, the `validateHMAC` step must take place on the `preValidation` lifecycle step as the fastify request body parsing takes place just prior to `preValidation`. Prior to `preValidation`, `request.body` will always be `null`.
 
 ### Global Hook Example
 
@@ -41,7 +41,7 @@ module.exports = function (fastify, options, next) {
 
   fastify.addHook('preValidation', (request, reply, next) => {
     try {
-      request.HMACValidate(request, reply, next)
+      request.validateHMAC(request, reply, next)
     } catch (err) {
       reply.send(err)
     }
@@ -72,9 +72,9 @@ module.exports = function (fastify, options, next) {
     getDigest: () => 'base64'
   })
 
-  fastify.decorate('validateHMAC', function (request, reply, next) {
+  fastify.decorate('verifyHMAC', function (request, reply, next) {
     try {
-      request.HMACValidate(request, reply, next)
+      request.validateHMAC(request, reply, next)
     } catch (err) {
       reply.send(err)
     }
@@ -87,7 +87,7 @@ module.exports = function (fastify, options, next) {
 
   fastify.post('/foo',
     {
-      preValidation: [fastify.validateHMAC]
+      preValidation: [fastify.verifyHMAC]
     },
     (req, reply) => {
       reply.type('application/json')

@@ -10,7 +10,7 @@ module.exports = function (fastify, options, next) {
   })
   fastify.addHook('preValidation', (request, reply, next) => {
     try {
-      request.HMACValidate(request, reply, next)
+      request.validateHMAC(request, reply, next)
     } catch (err) {
       reply.send(err)
     }
