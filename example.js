@@ -6,7 +6,7 @@ module.exports = function (fastify, options, next) {
   fastify.register(hmac, {
     sharedSecret: 'topSecret',
     getAlgorithm: () => 'sha512',
-    getDigest: () => 'base64'
+    getHMACEncoding: () => 'base64'
   })
 
   fastify.post('/', (req, reply) => {
