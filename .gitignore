@@ -105,3 +105,6 @@ dist
 
 # VsCode Settings
 .vscode/
+
+# Mac File System
+.DS_Store
