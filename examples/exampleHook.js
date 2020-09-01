@@ -1,6 +1,6 @@
 'use strict'
 
-const hmac = require('.')
+const hmac = require('../')
 
 module.exports = function (fastify, options, next) {
   fastify.register(hmac, {
@@ -8,8 +8,7 @@ module.exports = function (fastify, options, next) {
     getAlgorithm: () => 'sha512',
     getSignatureEncoding: () => 'base64'
   })
-
-  fastify.decorate('verifyHMAC', function (request, reply, next) {
+  fastify.addHook('preValidation', (request, reply, next) => {
     try {
       request.validateHMAC(request, reply, next)
     } catch (err) {
@@ -19,16 +18,7 @@ module.exports = function (fastify, options, next) {
 
   fastify.post('/', (req, reply) => {
     reply.type('application/json')
-    reply.send({ hello: 'no validation needed' })
+    reply.send({ hello: 'hmac' })
   })
-
-  fastify.post('/foo',
-    {
-      preValidation: [fastify.verifyHMAC]
-    },
-    (req, reply) => {
-      reply.type('application/json')
-      reply.send({ hello: 'validated HMAC' })
-    })
   next()
 }

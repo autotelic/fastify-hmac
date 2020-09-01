@@ -1,10 +1,10 @@
 'use strict'
 
-const hmac = require('.')
+const hmac = require('../')
 const {
   extractShopifySignature,
   constructShopifySignature
-} = require('./lib/shopifyHMAC')
+} = require('../lib/shopifyHMAC')
 
 module.exports = function (fastify, options, next) {
   fastify.register(hmac, {
