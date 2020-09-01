@@ -20,10 +20,12 @@ npm i @autotelic/fastify-hmac
   - During registration, provide a configuration object that contains the following:
     - A `sharedSecret` string
     - A `getAlgorithm` function that returns an algorithm string
-    - A `getDigest` function that returns a digest string
+    - A `getSignatureEncoding` function that returns a digest string
     - Optional configuration properties
       - A `verificationError` string - default: 'Unauthorized'
       - A `verificationErrorMessage` string - default: 'Signature verification failed'
+      - A `digestEncoding` sting - default: 'base64'
+      - A `getDigest` method - [default](#default_getDigest_method): A method that calculates and verifies a message Digest header to be used as input to the HMAC signature.
       - A `extractSignature` method - [default](#default_extractSignature_method): A method that extracts properties from a request Signature Header constructed according to [IETF draft standards][1]
       - A `constructSignatureString` method - [default](#default_constructSignatureString_method): A method that constructs a Signature digest string from the key material detailed in the request Signature header according to [IETF draft standards][1]
 - Add a [global](#global_hook_example) or [route level](#route_level_hook_example) `preValidation` hook to your application.
@@ -36,7 +38,7 @@ module.exports = function (fastify, options, next) {
   fastify.register(require('fastify-hmac'), {
     sharedSecret: 'topSecret',
     getAlgorithm: () => 'sha512',
-    getDigest: () => 'base64'
+    getSignatureEncoding: () => 'base64'
   })
 
   fastify.addHook('preValidation', (request, reply, next) => {
@@ -69,7 +71,7 @@ module.exports = function (fastify, options, next) {
   fastify.register(require('fastify-hmac'), {
     sharedSecret: 'topSecret',
     getAlgorithm: () => 'sha512',
-    getDigest: () => 'base64'
+    getSignatureEncoding: () => 'base64'
   })
 
   fastify.decorate('verifyHMAC', function (request, reply, next) {
@@ -121,7 +123,7 @@ module.exports = function (fastify, options, next) {
     extractSignature: extractShopifySignature,
     constructSignatureString: constructShopifySignature,
     getAlgorithm: () => 'sha256',
-    getDigest: () => 'hex'
+    getSignatureEncoding: () => 'hex'
   })
 
   fastify.addHook('preValidation', (request, reply, next) => {
@@ -150,6 +152,10 @@ npm run example:shopify -- -l info -w
 **TODO**
 
 ## Default constructSignatureString Method
+
+**TODO**
+
+## Default getDigest Method
 
 **TODO**
 

@@ -13,7 +13,7 @@ module.exports = function (fastify, options, next) {
     extractSignature: extractShopifySignature,
     constructSignatureString: constructShopifySignature,
     getAlgorithm: () => 'sha256',
-    getDigest: () => 'hex'
+    getSignatureEncoding: () => 'hex'
   })
 
   fastify.addHook('preValidation', (request, reply, next) => {
