@@ -5,16 +5,12 @@ const hmac = require('../')
 module.exports = function (fastify, options, next) {
   fastify.register(hmac, {
     sharedSecret: 'topSecret',
-    getKeyIdMap: () => ({
-      'test-key-a': {
-        name: 'hs2019',
-        algorithm: 'sha512'
-      },
-      'test-key-b': {
-        name: 'hs2019',
-        algorithm: 'sha256'
+    algorithmMap: {
+      hs2019: {
+        'test-key-a': 'sha512',
+        'test-key-b': 'sha256'
       }
-    }),
+    },
     getSignatureEncoding: () => 'base64'
   })
   fastify.addHook('preValidation', (request, reply, next) => {
@@ -29,5 +25,11 @@ module.exports = function (fastify, options, next) {
     reply.type('application/json')
     reply.send({ hello: 'hmac' })
   })
+
+  fastify.post('/foo', (req, reply) => {
+    reply.type('application/json')
+    reply.send({ hello: 'foo' })
+  })
+
   next()
 }
