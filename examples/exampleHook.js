@@ -5,7 +5,16 @@ const hmac = require('../')
 module.exports = function (fastify, options, next) {
   fastify.register(hmac, {
     sharedSecret: 'topSecret',
-    getAlgorithm: () => 'sha512',
+    getKeyIdMap: () => ({
+      'test-key-a': {
+        name: 'hs2019',
+        algorithm: 'sha512'
+      },
+      'test-key-b': {
+        name: 'hs2019',
+        algorithm: 'sha256'
+      }
+    }),
     getSignatureEncoding: () => 'base64'
   })
   fastify.addHook('preValidation', (request, reply, next) => {
