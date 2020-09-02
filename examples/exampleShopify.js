@@ -1,10 +1,10 @@
 'use strict'
 
-const hmac = require('.')
+const hmac = require('../')
 const {
   extractShopifySignature,
   constructShopifySignature
-} = require('./lib/shopifyHMAC')
+} = require('../lib/shopifyHMAC')
 
 module.exports = function (fastify, options, next) {
   fastify.register(hmac, {
@@ -13,7 +13,15 @@ module.exports = function (fastify, options, next) {
     extractSignature: extractShopifySignature,
     constructSignatureString: constructShopifySignature,
     getAlgorithm: () => 'sha256',
-    getDigest: () => 'hex'
+    getSignatureEncoding: () => 'hex'
+  })
+
+  fastify.addHook('preValidation', (request, reply, next) => {
+    try {
+      request.validateHMAC(request, reply, next)
+    } catch (err) {
+      reply.send(err)
+    }
   })
 
   fastify.post('/foo', (req, reply) => {
