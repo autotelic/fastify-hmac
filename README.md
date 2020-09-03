@@ -20,15 +20,15 @@ npm i @autotelic/fastify-hmac
   - During registration, provide a configuration object that contains the following:
     - A `sharedSecret` string
     - A `algorithmMap` object that maps Signature header `algorithm` and `keyId` properties to a specific algorithm. See [`getAlgorithm`](#default-getAlgorithm-method) for default structure.
-    - A `getSignatureEncoding` function that returns a encoding string to be used during HMAC signature construction. e.g. `'base64'` or `'hex'`
     - Optional configuration properties
-      - A `verificationError` string - default: 'Unauthorized'
-      - A `verificationErrorMessage` string - default: 'Signature verification failed'
-      - A `digestEncoding` sting - default: 'base64'
+      - A `verificationError` string - default: `'Unauthorized'`
+      - A `verificationErrorMessage` string - default: `'Signature verification failed'`
+      - A `digestEncoding` string - default: `'base64'`
       - A `getDigest` method - [default](#default-getDigest-method): A method that calculates and verifies a message Digest header to be used as input to the HMAC signature.
       - A `extractSignature` method - [default](#default-extractSignature-method): A method that extracts properties from a request Signature Header constructed according to [IETF draft standards][1]
       - A `constructSignatureString` method - [default](#default-constructSignatureString-method): A method that constructs a Signature digest string from the key material detailed in the request Signature header according to [IETF draft standards][1]
       - A `getAlgorithm` method - [default](#default-getAlgorithm-method): A method that returns an algorithm string from the `algorithmMap` configuration object.
+      - A `getSignatureEncoding` method - [default](#default-getSignatureEncoding-method): A method that returns a `'base64'` encoding string to be used during HMAC signature construction.
 - Add a [global](#global-hook-example) or [route level](#route-level-hook-example) `preValidation` hook to your application.
   - **Note:** For verification of HMAC signatures that include a body Digest header as HMAC key material, the `validateHMAC` step must take place on the `preValidation` lifecycle step as the fastify request body parsing takes place just prior to `preValidation`. Prior to `preValidation`, `request.body` will always be `null`.
 
@@ -43,8 +43,7 @@ module.exports = function (fastify, options, next) {
         'test-key-a': 'sha512',
         'test-key-b': 'sha256'
       }
-    },
-    getSignatureEncoding: () => 'base64'
+    }
   })
   fastify.addHook('preValidation', (request, reply, next) => {
     try {
@@ -85,8 +84,7 @@ module.exports = function (fastify, options, next) {
         'test-key-a': 'sha512',
         'test-key-b': 'sha256'
       }
-    },
-    getSignatureEncoding: () => 'base64'
+    }
   })
 
   fastify.decorate('verifyHMAC', function (request, reply, next) {
@@ -122,7 +120,7 @@ npm run example:decorator -- -l info -w
 
 ### Example: Shopify HMAC Query Parameter Verification
 
-The `extractSignature`, `constructSignatureString` and `getAlgorithm` methods can also be entirely replaced during registration by passing in new methods. This example shows how this plugin can be modified to verify Shopify Query String HMAC parameters instead of Signature headers. 
+The `extractSignature`, `constructSignatureString`, `getAlgorithm` and `getSignatureEncoding` methods can also be entirely replaced during registration by passing in new methods. This example shows how this plugin can be modified to verify Shopify Query String HMAC parameters instead of Signature headers. 
 
 ```js
 const {
