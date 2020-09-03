@@ -141,7 +141,7 @@ npm run example:decorator -- -l info -w
 
 ## Default extractSignature Method
 
-The `extractSignature` method returns the HMAC signature string found in the request Signature header. This signature is compared to the calculated HMAC signature to validate message authenticity. This method is called with one parameter, the fastify `request` object.
+The `extractSignature` method returns the HMAC signature string found in a request Signature header constructed according to [IETF draft standards][1]. This signature is compared to the calculated HMAC signature from `constructSignatureString` to validate message authenticity. This method is called with one parameter, the fastify `request` object.
 
 The method uses an internal helper method `parseSignatureString` to destructure the Signature header string into an object.
 
@@ -161,7 +161,7 @@ The default method:
 2. Updates the HMAC object with the signature content string obtained from `getMessage`
 3. Returns a calculated digest string encoded with the digest encoding string returned from `getSignatureEncoding` from the plugin options object.
 
-The `getMessage` function returns a formatted string according to [IETF draft standards][1]containing the Signature content listed under `headers` in the request Signature header.
+The `getMessage` function returns a formatted string according to [IETF draft standards][1] containing the Signature content listed under `headers` in the request Signature header.
 
 `getMessage` also uses an internal helper method `parseSignatureString` to destructure the Signature header string into an object.
 
