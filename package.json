@@ -8,6 +8,7 @@
     "example:hook": "fastify start examples/exampleHook.js",
     "example:decorator": "fastify start examples/exampleDecorator.js",
     "example:shopify": "fastify start examples/exampleShopify.js",
+    "lint": "standard",
     "fix": "standard --fix"
   },
   "repository": {
