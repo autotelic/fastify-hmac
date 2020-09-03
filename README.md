@@ -19,8 +19,8 @@ npm i @autotelic/fastify-hmac
 - Register plugin. This will decorate your `fastify` instance with a request method `HMACValidate`.
   - During registration, provide a configuration object that contains the following:
     - A `sharedSecret` string
-    - A `algorithmMap` object that maps Signature header `algorithm` and `keyId` properties to a specific algorithm
-    - A `getSignatureEncoding` function that returns a digest string
+    - A `algorithmMap` object that maps Signature header `algorithm` and `keyId` properties to a specific algorithm. See [`getAlgorithm`](#default-getAlgorithm-method) for default structure.
+    - A `getSignatureEncoding` function that returns a encoding string to be used during HMAC signature construction. e.g. `'base64'` or `'hex'`
     - Optional configuration properties
       - A `verificationError` string - default: 'Unauthorized'
       - A `verificationErrorMessage` string - default: 'Signature verification failed'
