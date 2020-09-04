@@ -190,11 +190,11 @@ This signature is compared to the HMAC signature string found in the request Sig
 
 
 Given the [Example Request](#example-request) this method will:
-1. Calls [`getAlgorithm`](#getAlgorithm-Method) from the plugin `options` object and uses its return value along with the `sharedSecret` property from the plugin `options` object to create a new HMAC object
-2. Updates the HMAC object with the signature content string obtained from `getMessage`
+1. Call [`getAlgorithm`](#getAlgorithm-Method) from the plugin `options` object and use its return value along with the `sharedSecret` property from the plugin `options` object to create a new HMAC object
+2. Update the HMAC object with the signature content string obtained from `getMessage`
    1. The `getMessage` function returns a formatted string according to [IETF draft standards][1] containing the Signature content listed under `headers` in the `request` Signature header.
-3. Encodes the signature with the digest encoding string returned from [`getSignatureEncoding`](#getSignatureEncoding-Method) in the plugin `options` object.
-4. Returns the calculated signature string of: `"pQul5YFrqv76Zq2bE1kWjJfFGnTu0MwU7X7c8MWDswAI5V7dROqKbBWKUGcoysxujgTqkJo/Eg74x34o54hqRg=="`
+3. Encode the signature with the digest encoding string returned from [`getSignatureEncoding`](#getSignatureEncoding-Method) in the plugin `options` object.
+4. Return the calculated signature string of: `"pQul5YFrqv76Zq2bE1kWjJfFGnTu0MwU7X7c8MWDswAI5V7dROqKbBWKUGcoysxujgTqkJo/Eg74x34o54hqRg=="`
 
 ## getDigest Method
 
@@ -204,11 +204,11 @@ This method is called with two parameters, the fastify `request` object and the 
 
 Given the [Example Request](#example-request) this method will:
 1. Parse the `request` Digest header to determine the appropriate hashing algorithm
-2. Hashes the `request` body using the algorithm
-3. Applies the digest encoding found in `options` property `digestEncoding` - default: `'base64'`
-3. Compares the new digest value with the value in the `request` Digest header
+2. Hash the `request` body using the algorithm
+3. Apply the digest encoding found in `options` property `digestEncoding` - default: `'base64'`
+3. Compare the new digest value with the value in the `request` Digest header
    - This will throw an error if the two values do not match
-4. Reconstructs the digest header and returns: `"sha-512=+PtokCNHosgo04ww4cNhd4yJxhMjLzWjDAKtKwQZDT4Ef9v/PrS/+BQLX4IX5dZkUMK/tQo7Uyc68RkhNyCZVg=="`
+4. Reconstruct the digest header and return: `"sha-512=+PtokCNHosgo04ww4cNhd4yJxhMjLzWjDAKtKwQZDT4Ef9v/PrS/+BQLX4IX5dZkUMK/tQo7Uyc68RkhNyCZVg=="`
 
 **Note:** The default method assumes:
 1. The Digest value is a hash of only the request body
