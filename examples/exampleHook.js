@@ -10,8 +10,7 @@ module.exports = function (fastify, options, next) {
         'test-key-a': 'sha512',
         'test-key-b': 'sha256'
       }
-    },
-    getSignatureEncoding: () => 'base64'
+    }
   })
   fastify.addHook('preValidation', (request, reply, next) => {
     try {
