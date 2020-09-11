@@ -4,7 +4,7 @@
 # fastify-hmac
 
 Fastify plugin for HMAC signatures.
-
+<!--
 - [How it works](#how-it-works)
 - [Install](#install)
 - [Usage](#usage)
@@ -22,19 +22,113 @@ Fastify plugin for HMAC signatures.
 - [Replacing Default Methods](#replacing-default-methods)
   - [Example: Shopify HMAC Query Parameter Verification](#example-shopify-hmac-query-parameter-verification)
     - [Run the example](#run-the-example-2)
-- [License](#license)
+- [License](#license) -->
 
-# How it works
-
-Verifies that http messages are signed according to [IETF draft standards][1].
-
-# Install
+## Install
 
 ```shell
 npm i @autotelic/fastify-hmac
 ```
 
-# Usage
+## Usage
+
+This plugin decorates the Fastify `Request` instance with a
+`validateHMAC` method, which can be used inside a hook to
+verify HMAC signatures.
+
+```js
+const crypto = require('crypto')
+const fastify = require('fastify')()
+
+fastify.register(require('fastify-hmac'), {
+  sharedSecret: 'topSecret',
+  extractSignature: (req, options) => {
+    const { query } = req
+    return query.signature
+  },
+  constructSignature: (req, options) => {
+    const { query } = req
+    const { signature, message } = query
+    const { sharedSecret } = options
+
+    return crypto
+      .createHmac('sha256', sharedSecret)
+      .update(message)
+      .digest('hex')
+      .toString()
+  }
+})
+
+fastify.addHook('preValidation', (request, reply, next) => {
+  try {
+    request.validateHMAC(request, reply, next)
+  } catch (err) {
+    reply.send(err)
+  }
+})
+
+fastify.after(() => {
+  fastify.get('/', (req, reply) => {
+    reply.send({ hello: 'hmac' })
+  })
+})
+```
+
+The default plugin options will extract
+and verify signatures constructed according to the [IETF draft standard for http signatures][ietf-draft].
+
+```js
+const fastify = require('fastify')()
+
+fastify.register(require('fastify-hmac'), {
+  sharedSecret: 'topSecret',
+  algorithmMap: {
+    hs2019: {
+      'exampleKeyId': 'sha512'
+    }
+  }
+})
+
+fastify.addHook('preValidation', (request, reply, next) => {
+  try {
+    request.validateHMAC(request, reply, next)
+  } catch (err) {
+    reply.send(err)
+  }
+})
+
+fastify.after(() => {
+  fastify.get('/', (req, reply) => {
+    reply.send({ hello: 'hmac' })
+  })
+})
+```
+
+See the section of this document on the [IETF draft standard](#ietf-draft-standard)
+for full details
+
+## Options
+
+### `sharedSecret` (String) (required)
+
+Secret, shared with the signer, used to reconstruct the HMAC signature.
+
+### `extractSignature(request, options)` (Function) (required)
+
+Extracts the signature to be verified from the request.
+
+#### Arguments
+
+* `request` _(Fastify `Request` Instance)_: the [Fastify Request instance][request] for the current request.
+* `options` (Object): the options passed to the plugin when it
+was registered.
+
+#### Default
+
+The default method will attempt to extract the signature from
+the request header `Signature`.
+
+### `algorithmMap` (Object)
 
 - Register plugin. This will decorate your `fastify` instance with a request method `HMACValidate`.
   - During registration, provide a configuration object that contains the following:
@@ -51,6 +145,10 @@ npm i @autotelic/fastify-hmac
       - A `getSignatureEncoding` method - [default](#getSignatureEncoding-method): A method that returns a `'base64'` encoding string to be used during HMAC signature construction.
 - Add a [global](#global-hook-example) or [route level](#route-level-hook-example) `preValidation` hook to your application.
   - **Note:** For verification of HMAC signatures that include a body Digest header as HMAC key material, the `validateHMAC` step must take place on the `preValidation` lifecycle step as the fastify request body parsing takes place just prior to `preValidation`. Prior to `preValidation`, `request.body` will always be `null`.
+
+
+
+## IETF draft standard
 
 ## Global Hook Example
 
@@ -182,11 +280,11 @@ Given the [Example Request](#example-request) this method will:
 
 ## constructSignatureString Method
 
-The `constructSignatureString` method returns a calculated HMAC signature string. 
+The `constructSignatureString` method returns a calculated HMAC signature string.
 
 This method is called with two parameters, the fastify `request` object and the plugin `options` object.
 
-This signature is compared to the HMAC signature string found in the request Signature header to validate message authenticity. 
+This signature is compared to the HMAC signature string found in the request Signature header to validate message authenticity.
 
 
 Given the [Example Request](#example-request) this method will:
@@ -198,9 +296,9 @@ Given the [Example Request](#example-request) this method will:
 
 ## getDigest Method
 
-The `getDigest` method returns a Digest header string to be used when assembling the HMAC signature input. 
+The `getDigest` method returns a Digest header string to be used when assembling the HMAC signature input.
 
-This method is called with two parameters, the fastify `request` object and the plugin `options` object. 
+This method is called with two parameters, the fastify `request` object and the plugin `options` object.
 
 Given the [Example Request](#example-request) this method will:
 1. Parse the `request` Digest header to determine the appropriate hashing algorithm
@@ -233,14 +331,14 @@ For the default `getAlgorithm`, an `algorithmMap` object matching the following 
 // const algorithmMap = {
 //   [algorithm]: {
 //     [keyId]: [algorithmString]
-//   } 
+//   }
 // }
 
 const algorithmMap = {
   hs2019: {
     'test-key-a': 'sha512',
     'test-key-b': 'sha256'
-  } 
+  }
 }
 ```
 
@@ -250,15 +348,15 @@ The `getSignatureEncoding` method returns a digest encoding string to be used wh
 
 This method is called with two parameters, the fastify `request` object and the plugin `options` object.
 
-The default method simply returns `"base64"`. 
+The default method simply returns `"base64"`.
 
 # Replacing Default Methods
 
 ## Example: Shopify HMAC Query Parameter Verification
 
-The `extractSignature`, `constructSignatureString`, `getAlgorithm` and `getSignatureEncoding` methods can also be entirely replaced during registration by passing in new methods. 
+The `extractSignature`, `constructSignatureString`, `getAlgorithm` and `getSignatureEncoding` methods can also be entirely replaced during registration by passing in new methods.
 
-This example shows how the plugin can be modified to verify Shopify Query String HMAC parameters instead of Signature headers. 
+This example shows how the plugin can be modified to verify Shopify Query String HMAC parameters instead of Signature headers.
 
 ```js
 const {
@@ -301,4 +399,6 @@ npm run example:shopify -- -l info -w
 
 MIT
 
-[1]: https://datatracker.ietf.org/doc/draft-ietf-httpbis-message-signatures/
+[ietf-draft]: https://datatracker.ietf.org/doc/draft-ietf-httpbis-message-signatures/
+[request]: https://www.fastify.io/docs/latest/Request/
+[shopify-oauth]: https://shopify.dev/tutorials/authenticate-with-oauth#verification
