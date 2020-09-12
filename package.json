@@ -5,9 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "tap -R classic -j1",
-    "example:hook": "fastify start examples/exampleHook.js",
-    "example:decorator": "fastify start examples/exampleDecorator.js",
-    "example:shopify": "fastify start examples/exampleShopify.js",
+    "example:basic": "fastify start examples/basic.js",
+    "example:shopify": "fastify start examples/shopify.js",
     "lint": "standard",
     "fix": "standard --fix"
   },
