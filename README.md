@@ -57,12 +57,12 @@ module.exports = app
 | Name | Type | Description |
 |------|------|-------------|
 | `sharedSecret` | `string` | Secret used by client to generate signatures. (*required*) |
-| `algorithmMap` | `{ [algorithm]: { [keyId]: string } }` | Maps the Signature header `algorithm` and `keyId` properties to a specific algorithm. (*required, unless providing `getAlgorithm`*) |
-| `verificationError` | `(string) => Error` | Receives an error message and returns an error. By default, all errors returned are generic `Unauthenticated` http errors. This is to prevent sending sensitive error data to the client. (*optional*) |
+| `algorithmMap` | `{ [algorithm]: { [keyId]: string } }` | Maps the `Signature` header `algorithm` and `keyId` properties to a specific algorithm. (*required, unless providing `getAlgorithm`*) |
+| `verificationError` | `(string) => Error` | Receives the original error message and returns a new error. By default, all errors returned are generic `Unauthenticated` http errors. This is to prevent sending sensitive error data to the client. (*optional*) |
 | `digestEncoding` | `string` |Defaults to `'base64'`. (*optional*) |
-| `getDigest` | `(FastifyRequest, PluginOpts) => string` | Calculates and verifies a message Digest header to be used as input to the HMAC signature. (*optional*) |
-| `extractSignature` | `(FastifyRequest, PluginOpts) => string` | Extracts properties from a request Signature Header constructed according to [IETF draft standards][1]. (*optional*) |
-| `constructSignatureString` | `(FastifyRequest, PluginOpts) => string` | Constructs a Signature digest string from the key material detailed in the request Signature header according to [IETF draft standards][1]. (*optional*) |
+| `getDigest` | `(FastifyRequest, PluginOpts) => string` | Calculates and verifies a message `Digest` header to be used as input to the HMAC signature. (*optional*) |
+| `extractSignature` | `(FastifyRequest, PluginOpts) => string` | Extracts properties from the `Signature` Header constructed according to [IETF draft standards][1]. (*optional*) |
+| `constructSignatureString` | `(FastifyRequest, PluginOpts) => string` | Constructs a signature digest string from the key material detailed in the `Signature` header according to [IETF draft standards][1]. (*optional*) |
 | `getAlgorithm` | `(FastifyRequest, PluginOpts) => string` | Returns an HMAC algorithm. By default this will use the `keyId` and `algorithm` values from the `Signature` header, to pull the appropriate value from the `algorithmMap`. (*optional*) |
 | `getSignatureEncoding` | `(FastifyRequest, PluginOpts) => string` | Returns the encoding to be used during HMAC signature construction. (*optional - defaults to `() => 'base64'`*) |
 | `validateRequests` | `boolean` | If `true` will add a `preValidation` hook to validate HMAC signatures. (*optional - defaults to `true`*) |
