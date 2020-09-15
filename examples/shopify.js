@@ -6,27 +6,18 @@ const {
   constructShopifySignature
 } = require('../lib/shopifyHMAC')
 
-module.exports = function (fastify, options, next) {
+async function app (fastify, options) {
   fastify.register(hmac, {
     sharedSecret: 'hush',
-    verificationErrorMessage: 'Shopify HMAC parameter verification failed',
     extractSignature: extractShopifySignature,
     constructSignatureString: constructShopifySignature,
     getAlgorithm: () => 'sha256',
     getSignatureEncoding: () => 'hex'
   })
 
-  fastify.addHook('preValidation', (request, reply, next) => {
-    try {
-      request.validateHMAC(request, reply, next)
-    } catch (err) {
-      reply.send(err)
-    }
-  })
-
-  fastify.post('/foo', (req, reply) => {
-    reply.type('application/json')
+  fastify.post('/foo', async (req, reply) => {
     reply.send({ hello: 'shopify' })
   })
-  next()
 }
+
+module.exports = app
