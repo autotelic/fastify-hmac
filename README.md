@@ -17,7 +17,7 @@ npm i @autotelic/fastify-hmac
 
 ## Usage
 
-Registering the plugin, will decorate the `fastify` request with a `validateHMAC` method, and add a pre-validation hook to verify the HMAC signature of requests.
+Registering the plugin will decorate the `fastify` request instance with a `validateHMAC` method, and add a pre-validation hook to verify the HMAC signature of requests.
 
 ```js
 const hmac = require('@autotelic/fastify-hmac')
