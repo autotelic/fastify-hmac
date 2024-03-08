@@ -1,7 +1,7 @@
 'use strict'
 
 const fp = require('fastify-plugin')
-const { Unauthorized } = require('http-errors')
+const { Unauthorized, BadRequest } = require('http-errors')
 const {
   constructSignatureString,
   extractSignature,
@@ -21,26 +21,38 @@ function fastifyHMAC (fastify, options, next) {
     getAlgorithm,
     getDigest,
     getSignatureEncoding: () => DEFAULT_ENCODING,
-    sharedSecret: null,
     validateRequests: true,
+    sharedSecret: null,
     verificationError: () => new Unauthorized(DEFAULT_ERROR_MESSAGE),
     ...options
   }
 
-  if (pluginOptions.sharedSecret === null) {
-    next(new Error('missing shared secret'))
+  if (pluginOptions.sharedSecret === null && pluginOptions.validateRequests) {
+    next(new Error('Must provide shared secret in plugin options when validateRequests hook enabled'))
   }
 
-  function validateHMAC (callback) {
+  function validateHMAC (argSharedSecret = null, callback) {
     const request = this
     const {
       extractSignature,
       constructSignatureString,
-      verificationError
+      verificationError,
+      sharedSecret: configSharedSecret
     } = pluginOptions
 
+    if (configSharedSecret === null && argSharedSecret === null) {
+      throw BadRequest('No shared secret provided')
+    }
+
+    // argSharedSecret takes precedence over configSharedSecret
+    const options = {
+      ...pluginOptions,
+      ...(configSharedSecret !== null ? { sharedSecret: configSharedSecret } : {}),
+      ...(argSharedSecret !== null ? { sharedSecret: argSharedSecret } : {})
+    }
+
     try {
-      if (extractSignature(request, pluginOptions) === constructSignatureString(request, pluginOptions)) {
+      if (extractSignature(request, pluginOptions) === constructSignatureString(request, options)) {
         return callback ? callback() : true
       }
       throw Error(DEFAULT_ERROR_MESSAGE)
@@ -54,7 +66,7 @@ function fastifyHMAC (fastify, options, next) {
 
   if (pluginOptions.validateRequests) {
     fastify.addHook('preValidation', function (request, reply, next) {
-      request.validateHMAC(next)
+      request.validateHMAC(pluginOptions.sharedSecret, next)
     })
   }
 
